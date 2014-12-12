@@ -23,11 +23,11 @@ type heroAtributes struct {
 func generateRandomHero(name string) *hero {
 	heroName := name
 	rand.Seed( time.Now().UTC().UnixNano())
-	heroAtrStrenght := 1+(rand.Intn(99))	
+	heroAtrStrenght := 1+(rand.Intn(99))
 	heroAtrDexterity := 1+(rand.Intn(99))
-	heroVitlity := 1+(rand.Intn(99))
+	heroVitality := 10000+(rand.Intn(99))
 	heroCritChance := 1+(rand.Intn(99))
-	heroAtr := heroAtributes{Strenght: heroAtrStrenght, Dexterity: heroAtrDexterity, Vitality: heroVitlity, CritChance: heroCritChance}
+	heroAtr := heroAtributes{Strenght: heroAtrStrenght, Dexterity: heroAtrDexterity, Vitality: heroVitality, CritChance: heroCritChance}
 	return &hero{Name: heroName, Atributes: heroAtr}
 }
 
@@ -62,7 +62,20 @@ func hit(strenght int, critchance int) (int, bool) {
 
 func duel(h1 *hero, h2 *hero) string {	
 	// h1 hit
-	for {
+	gameTick := 1
+
+	p1tick := 110 - h1.Atributes.Dexterity
+	p2tick := 110 - h2.Atributes.Dexterity
+
+
+	for ;;gameTick++ {
+
+
+	p1divident := gameTick % p1tick
+	p2divident := gameTick % p2tick
+
+	//fmt.Println("p1: ", p1tick," p2 ", p2tick, "tick", gameTick , "p1 divident: ", p1divident , "p2 divident" , p2divident)
+	if (p1divident==0) {
 	hitdmgP1, hitcritP1 := hit(h1.Atributes.Strenght, h1.Atributes.CritChance)
 	
 	h2.Atributes.Vitality = h2.Atributes.Vitality - hitdmgP1
@@ -75,18 +88,23 @@ func duel(h1 *hero, h2 *hero) string {
 		return h1.Name
 	}
 
+	}
 
+
+	if (p2divident==0) {
         // h2 hit
         hitdmgP2, hitcritP2 := hit(h2.Atributes.Strenght, h2.Atributes.CritChance)
         h1.Atributes.Vitality = h1.Atributes.Vitality - hitdmgP2
         
 	critmsgP2 := ""
 	if(hitcritP2) {critmsgP2 = "[CRITICAL]"}
-	fmt.Println(h2.Name, "Hits", h1.Name, "(",h2.Atributes.Vitality ,")", " with the sword ", critmsgP2, " and took ", hitdmgP1 , " HP" )
+	fmt.Println(h2.Name, "Hits", h1.Name, "(",h1.Atributes.Vitality ,")", " with the sword ", critmsgP2, " and took ", hitdmgP2 , " HP" )
 
         if (h1.Atributes.Vitality <= 0) {
                 return h2.Name
         }
+
+	}
 	
 	}
 	
