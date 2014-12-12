@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"os"
 )
 
 
@@ -25,7 +26,7 @@ func generateRandomHero(name string) *hero {
 	rand.Seed( time.Now().UTC().UnixNano())
 	heroAtrStrenght := 1+(rand.Intn(99))
 	heroAtrDexterity := 1+(rand.Intn(99))
-	heroVitality := 10000+(rand.Intn(99))
+	heroVitality := 100+(rand.Intn(99))
 	heroCritChance := 1+(rand.Intn(99))
 	heroAtr := heroAtributes{Strenght: heroAtrStrenght, Dexterity: heroAtrDexterity, Vitality: heroVitality, CritChance: heroCritChance}
 	return &hero{Name: heroName, Atributes: heroAtr}
@@ -113,8 +114,19 @@ func duel(h1 *hero, h2 *hero) string {
 }
 
 func main() {
-	h1 := generateRandomHero("Kuhan")
-	h2 := generateRandomHero("Odoum")
+
+	p1name := "Kuhan"
+	p2name := "Odoum"
+
+	ConsoleArguments := os.Args[1:]
+
+	if len(ConsoleArguments) >= 2 {
+		fmt.Println(ConsoleArguments[0], " - vs - ", ConsoleArguments[1])
+		p1name = ConsoleArguments[0]
+		p2name = ConsoleArguments[1]
+	}
+	h1 := generateRandomHero(p1name)
+	h2 := generateRandomHero(p2name)
 	showHeroInfo(h1)
 	showHeroInfo(h2)
 	fmt.Println("The winner is: ", duel(h1, h2))
